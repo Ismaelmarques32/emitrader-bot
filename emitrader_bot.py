@@ -495,7 +495,7 @@ app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_signal))
 
 asyncio.create_task(send_sticker_at_830(app))
 
- webhook_url = "https://emitrader-bot-production.up.railway.app/webhook"
+webhook_url = "https://emitrader-bot-production.up.railway.app/webhook"
     await app.bot.set_webhook(webhook_url)
 
     aio_app = web.Application()
