@@ -3,6 +3,7 @@ import asyncio
 import datetime
 import pytz
 import nest_asyncio
+from aiohttp import web
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 
@@ -474,6 +475,17 @@ async def send_sticker_at_830(context: ContextTypes.DEFAULT_TYPE):
         except Exception as e:
             print(f"Erro inesperado: {e}")
 
+# === WEBHOOK CONFIG ===
+
+async def webhook(request):
+    data = await request.json()
+    update = Update.de_json(data, app.bot)
+    await app.process_update(update)
+    return web.Response(status=200)
+
+async def main():
+    global app
+
 # Inicializando o bot
 app = ApplicationBuilder().token('7372781018:AAGp67ScEVsyQFr6FQo2HezNKAS8zqjJwAU').build()
 
@@ -481,7 +493,23 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(CallbackQueryHandler(button))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_signal))
 
-nest_asyncio.apply()
-loop = asyncio.get_event_loop()
-loop.create_task(send_sticker_at_830(app))
-app.run_polling()
+asyncio.create_task(send_sticker_at_830(app))
+
+ webhook_url = "https://emitrader-bot-production.up.railway.app/webhook"
+    await app.bot.set_webhook(webhook_url)
+
+    aio_app = web.Application()
+    aio_app.router.add_post("/webhook", webhook)
+
+    runner = web.AppRunner(aio_app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", 8080)
+    await site.start()
+
+    print(f"✅ Webhook ativo em {webhook_url}")
+    while True:
+        await asyncio.sleep(3600)
+
+if __name__ == '__main__':
+    nest_asyncio.apply()
+    asyncio.run(main())
