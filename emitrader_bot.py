@@ -1,4 +1,5 @@
 import os
+import json
 import asyncio
 import datetime
 import pytz
@@ -21,7 +22,7 @@ STICKER_LOSS = 'CAACAgEAAxkBAAPdZsnoL2B38wOunaWwLwkOaTNaoR8AAiEEAAI019hFwqt42sFt
 STICKER_SESSAO_INICIADA = 'CAACAgEAAxkBAAPfZsnoNZDjN_edHpedotkV6ZkfkWoAAgcGAALttuBF8IaPc-uNIoA1BA'
 
 # ID do canal substituído pelo username do canal público
-CHANNEL_ID = '@testesinaisemi' #'@emitrader'
+CHANNEL_ID = '@emitrader' #'@testesinaisemi'
 
 # Função para o comando de início
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -475,38 +476,43 @@ async def send_sticker_at_830(context: ContextTypes.DEFAULT_TYPE):
         except Exception as e:
             print(f"Erro inesperado: {e}")
 
-# === WEBHOOK CONFIG ===
+# Inicializando o bot
+app = ApplicationBuilder().token('7372781018:AAGp67ScEVsyQFr6FQo2HezNKAS8zqjJwAU').build()
 
+nest_asyncio.apply()
+
+# Função webhook para lidar com requisições do Telegram
 async def webhook(request):
-    data = await request.json()
-    update = Update.de_json(data, app.bot)
-    await app.process_update(update)
-    return web.Response(status=200)
+    if request.method == "POST":
+        data = await request.json()
+        update = Update.de_json(data, app.bot)
+        await app.process_update(update)
+        return web.Response(text="OK")
+    return web.Response(status=405)
 
+# Função principal para rodar o bot via webhook
 async def main():
-    global app
-    app = ApplicationBuilder().token('7372781018:AAGp67ScEVsyQFr6FQo2HezNKAS8zqjJwAU').build()
-    
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_signal))
+
+    # Tarefa para envio automático do sticker às 21:00
     asyncio.create_task(send_sticker_at_830(app))
-    
+
+    # Define a URL pública do seu Railway
     webhook_url = "https://emitrader-bot-production.up.railway.app/webhook"
-    await app.bot.set_webhook(webhook_url)
+    await app.bot.set_webhook(url=webhook_url)
 
-    aio_app = web.Application()
-    aio_app.router.add_post("/webhook", webhook)
+    # Configura o servidor web para receber as atualizações
+    application = web.Application()
+    application.router.add_post("/webhook", webhook)
 
-    runner = web.AppRunner(aio_app)
+    runner = web.AppRunner(application)
     await runner.setup()
-    site = web.TCPSite(runner, "0.0.0.0", 8080)
+    site = web.TCPSite(runner, "0.0.0.0", int(os.environ.get("PORT", 8080)))
     await site.start()
+    print("✅ Webhook iniciado com sucesso")
 
-    print(f"✅ Webhook ativo em {webhook_url}")
-    while True:
-        await asyncio.sleep(3600)
+# Executa tudo
+asyncio.run(main())
 
-if __name__ == '__main__':
-    nest_asyncio.apply()
-    asyncio.run(main())
