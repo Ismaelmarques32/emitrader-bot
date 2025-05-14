@@ -22,7 +22,7 @@ STICKER_LOSS = 'CAACAgEAAxkBAAPdZsnoL2B38wOunaWwLwkOaTNaoR8AAiEEAAI019hFwqt42sFt
 STICKER_SESSAO_INICIADA = 'CAACAgEAAxkBAAPfZsnoNZDjN_edHpedotkV6ZkfkWoAAgcGAALttuBF8IaPc-uNIoA1BA'
 
 # ID do canal substituído pelo username do canal público
-CHANNEL_ID = '@testesinaisemi' #'@emitrader' 
+CHANNEL_ID = '@emitrader' #'@testesinaisemi'
 
 # Função para o comando de início
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
