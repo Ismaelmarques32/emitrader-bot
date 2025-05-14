@@ -1,2 +1,3 @@
-python emitrader_bot.py
+start: python emitrader_bot.py
+
 
