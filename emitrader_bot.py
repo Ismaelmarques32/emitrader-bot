@@ -511,13 +511,10 @@ async def main():
     await site.start()
 
     # 🚨 Só depois que o servidor está de pé, setamos o webhook
-    webhook_url = "https://emitrader-bot-production.up.railway.app/webhook"
-    await app.bot.set_webhook(url=webhook_url)
+webhook_url = "https://emitrader-bot-production.up.railway.app/webhook"
+await app.bot.set_webhook(url=webhook_url)
 
-    print("✅ Webhook iniciado com sucesso")
+print("✅ Webhook iniciado com sucesso")
 
-# Executa tudo
-if __name__ == "__main__":
-    nest_asyncio.apply()
-    asyncio.run(main())
-
+# 💤 MANTÉM o processo vivo
+await asyncio.Event().wait()
