@@ -1,1 +1,2 @@
-worker: python emitrader_bot.py
+python emitrader_bot.py
+
