@@ -517,5 +517,7 @@ async def main():
     print("✅ Webhook iniciado com sucesso")
 
 # Executa tudo
-asyncio.run(main())
+if __name__ == "__main__":
+    nest_asyncio.apply()
+    asyncio.run(main())
 
