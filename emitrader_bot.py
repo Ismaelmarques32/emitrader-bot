@@ -17,7 +17,7 @@ STICKER_WIN = 'CAACAgEAAxkBAAPhZsnoOnV7QkVn-3CbCRKC2e3XmuoAAjIEAAI6q-BF_bQwkyhGN
 STICKER_LOSS = 'CAACAgEAAxkBAAPdZsnoL2B38wOunaWwLwkOaTNaoR8AAiEEAAI019hFwqt42sFtXOM1BA'
 STICKER_SESSAO_INICIADA = 'CAACAgEAAxkBAAPfZsnoNZDjN_edHpedotkV6ZkfkWoAAgcGAALttuBF8IaPc-uNIoA1BA'
 
-CHANNEL_ID = '@emitrader'
+CHANNEL_ID = '@testesinaisemi'
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
