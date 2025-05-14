@@ -492,20 +492,16 @@ async def webhook(request):
 
 # Função principal para rodar o bot via webhook
 async def main():
-    await app.initialize()  # ✅ ESSENCIAL PARA WEBHOOK FUNCIONAR
+    await app.initialize()  # ✅ necessário antes de process_update
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_signal))
 
-    # Tarefa para envio automático do sticker às 21:00
+    # Envio automático do sticker
     asyncio.create_task(send_sticker_at_830(app))
 
-    # Define a URL pública do seu Railway
-    webhook_url = "https://emitrader-bot-production.up.railway.app/webhook"
-    await app.bot.set_webhook(url=webhook_url)
-
-    # Configura o servidor web para receber as atualizações
+    # Criar servidor web para receber atualizações
     application = web.Application()
     application.router.add_post("/webhook", webhook)
 
@@ -513,6 +509,11 @@ async def main():
     await runner.setup()
     site = web.TCPSite(runner, "0.0.0.0", int(os.environ.get("PORT", 8080)))
     await site.start()
+
+    # 🚨 Só depois que o servidor está de pé, setamos o webhook
+    webhook_url = "https://emitrader-bot-production.up.railway.app/webhook"
+    await app.bot.set_webhook(url=webhook_url)
+
     print("✅ Webhook iniciado com sucesso")
 
 # Executa tudo
