@@ -492,6 +492,8 @@ async def webhook(request):
 
 # Função principal para rodar o bot via webhook
 async def main():
+    await app.initialize()  # ✅ ESSENCIAL PARA WEBHOOK FUNCIONA
+    
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_signal))
