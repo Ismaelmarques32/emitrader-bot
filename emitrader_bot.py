@@ -60,8 +60,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if query.data == 'inicia_sessao':
         session_message = (
-            "⏰ *EMI-TRADER – O show dos sinais começa às 21h! 🚀*\n\n"
-            "📡 *Live ao vivo no YouTube + Sinais no Telegram*\n\n"
+            "⏰ *EMI-TRADER – O show dos sinais começa às 20h! 🚀*\n\n"
+            "📡 *Live ao vivo no YouTube às 21h + Sinais no Telegram*\n\n"
             "🎯 Está pronto para transformar oportunidades em resultados?\n"
             "💻 Deixe sua corretora preparada e seu mindset afiado para agir no momento certo!\n\n"
             "💡 *Dica esperta:*\n"
@@ -460,11 +460,11 @@ async def encerrar_sessao(update: Update, context: ContextTypes.DEFAULT_TYPE):
     relatorio = []
 
 async def send_sticker_at_830(context: ContextTypes.DEFAULT_TYPE):
-    """Função para enviar o sticker de 'Sessão Iniciada' às 21:00 diariamente."""
+    """Função para enviar o sticker de 'Sessão Iniciada' às 20:00 diariamente."""
     while True:
         try:
             now = datetime.datetime.now(pytz.timezone('America/Sao_Paulo'))
-            target_time = now.replace(hour=21, minute=0, second=0, microsecond=0)
+            target_time = now.replace(hour=20, minute=0, second=0, microsecond=0)
 
             # Se o tempo alvo já passou no dia de hoje, ajuste para o dia seguinte
             if now > target_time:
