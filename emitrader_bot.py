@@ -515,7 +515,7 @@ async def main():
 
     # 👇 Isso aqui é essencial!
     await asyncio.Event().wait()
-
+    
 # Executa tudo
 if __name__ == "__main__":
     nest_asyncio.apply()
