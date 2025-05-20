@@ -489,6 +489,10 @@ async def webhook(request):
         await app.process_update(update)
         return web.Response(text="OK")
     return web.Response(status=405)
+    
+# Função para permitir requisições GET no webhook (para health check)
+async def webhook_health(request):
+    return web.Response(text="Webhook ativo", status=200)
 
 # Função principal para rodar o bot via webhook
 async def main():
@@ -501,7 +505,10 @@ async def main():
     asyncio.create_task(send_sticker_at_830(app))
 
     application = web.Application()
-    application.router.add_post("/webhook", webhook)
+    application.router.add_routes([
+        web.post("/webhook", webhook),
+        web.get("/webhook", webhook_health)
+    ])
     application.router.add_get("/", lambda request: web.Response(text="OK"))
 
     runner = web.AppRunner(application)
