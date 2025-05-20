@@ -502,6 +502,7 @@ async def main():
 
     application = web.Application()
     application.router.add_post("/webhook", webhook)
+    application.router.add_get("/", lambda request: web.Response(text="OK"))
 
     runner = web.AppRunner(application)
     await runner.setup()
