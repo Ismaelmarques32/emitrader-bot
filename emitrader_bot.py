@@ -484,6 +484,7 @@ nest_asyncio.apply()
 # Função webhook para lidar com requisições do Telegram
 async def webhook(request):
     if request.method == "POST":
+        print("📥 POST recebido no webhook!")
         data = await request.json()
         update = Update.de_json(data, app.bot)
         await app.process_update(update)
@@ -518,6 +519,8 @@ async def main():
 
     webhook_url = "https://emitrader-bot-production.up.railway.app/webhook"
     await app.bot.set_webhook(url=webhook_url)
+    info = await app.bot.get_webhook_info()
+    print(f"🌐 Webhook setado para: {info.url}")
 
     print("✅ Webhook iniciado com sucesso")
 
