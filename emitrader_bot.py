@@ -162,9 +162,11 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_signal(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global operation_type, current_operation, waiting_for_gale_time, gale_stage
 
-    if update.message is None:
-        await update.callback_query.answer(text="Nenhuma mensagem de texto detectada.")
+    if not update.message or not update.message.text:
+        if update.callback_query:
+            await update.callback_query.answer(text="Nenhuma mensagem de texto detectada.")
         return
+
 
     if waiting_for_gale_time:  # Confirmação do Gale
         try:
